@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MVCEntityMSSQLSignalR.DAL.Interfaces;
 using MVCEntityMSSQLSignalR.Models;
 using System;
 using System.Diagnostics;

@@ -7,14 +7,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using MVCEntityMSSQLSignalR.Data;
+using MVCEntityMSSQLSignalR.DAL.Contexts;
+using MVCEntityMSSQLSignalR.DAL.Interfaces;
+using MVCEntityMSSQLSignalR.DAL.Repositories;
 using MVCEntityMSSQLSignalR.Services;
 using MVCEntityMSSQLSignalR.SignalR;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR
 {
@@ -28,10 +26,12 @@ namespace MVCEntityMSSQLSignalR
         {
             Configuration = configuration;
         }
+
         /// <summary>
         /// Configuration get-property
         /// </summary>
         public IConfiguration Configuration { get; }
+
         /// <summary>
         /// Service configuration method
         /// </summary>
@@ -39,9 +39,13 @@ namespace MVCEntityMSSQLSignalR
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
+            string filesConnection = Configuration.GetConnectionString("FilesConnection");
 
             services.AddDbContext<ApplicationContext>(options =>
                  options.UseSqlServer(connection));
+            services.AddDbContext<FileContext>(options =>
+                options.UseSqlServer(filesConnection));
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                             {
@@ -51,7 +55,12 @@ namespace MVCEntityMSSQLSignalR
             services.AddSignalR();
 
             services.AddTransient<IBotService, BotService>();
+            services.AddScoped<IRepository<DAL.Entities.User>, UserRepository>();
+            services.AddScoped<IRepository<DAL.Entities.Message>, MessageRepository>();
+            services.AddScoped<IRepository<DAL.Entities.File>, FileRepository>();
+            services.AddScoped<IUnitOfWork, EFUnitOfWork>();
         }
+
         /// <summary>
         /// Configuration method
         /// </summary>
@@ -67,17 +76,15 @@ namespace MVCEntityMSSQLSignalR
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseDirectoryBrowser(new DirectoryBrowserOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\music")),
-
                 RequestPath = new PathString("/music")
             });
 

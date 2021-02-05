@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MVCEntityMSSQLSignalR.Data;
-using MVCEntityMSSQLSignalR.Models;
+using MVCEntityMSSQLSignalR.DAL.Contexts;
+using MVCEntityMSSQLSignalR.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,7 @@ namespace MVCEntityMSSQLSignalR.Services
     public class BotService : IBotService
     {
         private readonly ApplicationContext _db;
+
         /// <summary>
         /// Bot class controller
         /// </summary>
@@ -19,6 +20,7 @@ namespace MVCEntityMSSQLSignalR.Services
         {
             _db = context;
         }
+
         /// <summary>
         /// Clear messages table method
         /// </summary>
@@ -26,17 +28,19 @@ namespace MVCEntityMSSQLSignalR.Services
         {
             _db.Messages.RemoveRange();
         }
+
         /// <summary>
         /// Resolving \commands method
         /// </summary>
         /// <param name="messageText"></param>
-        /// <returns></returns>
+        /// <param name="userEmail">User Email</param>
+        /// <returns>Collection of answer phrases</returns>
         public async Task<List<string>> HandleMessage(string messageText, string userEmail)
         {
             List<string> answer = new List<string>();
             var user = _db.Users.First(u => u.Email == userEmail);
 
-            if(user == null)
+            if (user == null)
             {
                 answer.Add("You're user is missing in system");
             }
@@ -85,6 +89,7 @@ namespace MVCEntityMSSQLSignalR.Services
 
             return answer;
         }
+
         /// <summary>
         /// Removing messages by phrase method
         /// </summary>

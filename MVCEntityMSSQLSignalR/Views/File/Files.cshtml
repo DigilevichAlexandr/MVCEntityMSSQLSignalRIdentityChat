@@ -1,0 +1,15 @@
+﻿@model IEnumerable<MVCEntityMSSQLSignalR.DAL.Entities.File>
+@{
+    ViewData["Title"] = "Add file";
+}
+<h3>Choose file to upload</h3>
+<form asp-action="AddFile" asp-controller="File" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadedFile" /><br>
+    <input type="submit" value="Upload" />
+</form>
+
+<h3>All files</h3>
+@foreach (var f in Model)
+{
+    <p><img src="@Url.Content(f.Path)"></p>
+}

@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MVCEntityMSSQLSignalR.Data;
+using MVCEntityMSSQLSignalR.DAL.Contexts;
+using MVCEntityMSSQLSignalR.DAL.Entities;
 using MVCEntityMSSQLSignalR.Helpers;
 using MVCEntityMSSQLSignalR.Models;
 using System.Collections.Generic;
