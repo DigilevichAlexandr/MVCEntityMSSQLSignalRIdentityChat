@@ -50,11 +50,9 @@ namespace MVCEntityMSSQLSignalR.Services
                 case @"\get":
                     {
                         int.TryParse(messageText.Replace(@"\get", string.Empty), out int n);
+                        var messages = await _db.Messages.Include(m => m.User).Take(n > 0 && n <= 100 ? n : 10).ToListAsync();
 
-                        answer.AddRange(
-                            await _db.Messages.Select(m => m.Text)
-                                .Take(n > 0 && n <= 100 ? n : 10)
-                                .ToListAsync());
+                        answer.AddRange(messages.Select(m => $"{m.User.Email}: {m.Text}"));
                     }
                     break;
                 case @"\clear":
