@@ -31,9 +31,15 @@ namespace MVCEntityMSSQLSignalR.Services
         /// </summary>
         /// <param name="messageText"></param>
         /// <returns></returns>
-        public async Task<List<string>> HandleMessage(string messageText)
+        public async Task<List<string>> HandleMessage(string messageText, string userEmail)
         {
             List<string> answer = new List<string>();
+            var user = _db.Users.First(u => u.Email == userEmail);
+
+            if(user == null)
+            {
+                answer.Add("You're user is missing in system");
+            }
 
             switch (messageText.Split()[0])
             {
@@ -66,7 +72,7 @@ namespace MVCEntityMSSQLSignalR.Services
                         Message message = new Message
                         {
                             Text = messageText,
-                            User = new User() { UserName = "Unknown" }
+                            User = user
                         };
 
                         _db.Messages.Add(message);

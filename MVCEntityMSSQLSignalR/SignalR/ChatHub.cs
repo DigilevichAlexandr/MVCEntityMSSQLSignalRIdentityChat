@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using MVCEntityMSSQLSignalR.BLL.DTO;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using MVCEntityMSSQLSignalR.Services;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR.SignalR
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly IBotService _bot;
@@ -27,12 +27,12 @@ namespace MVCEntityMSSQLSignalR.SignalR
         {
             try
             {
-                //var messageDTO = new MessageDTO() { UserName = };
-                var answer = await _bot.HandleMessage(messageText);
+                var userName = Context.User.Identity.Name;
+                var answer = await _bot.HandleMessage(messageText, userName);
 
                 foreach (string message in answer)
                 {
-                    await this.Clients.All.SendAsync("Send", message);
+                    await this.Clients.All.SendAsync("Send", userName +": "+ message);
                 }
             }
             catch (Exception ex)
