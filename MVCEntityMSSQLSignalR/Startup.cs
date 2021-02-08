@@ -8,10 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using MVCEntityMSSQLSignalR.BLL.Services;
 using MVCEntityMSSQLSignalR.DAL.Contexts;
 using MVCEntityMSSQLSignalR.DAL.Interfaces;
 using MVCEntityMSSQLSignalR.DAL.Repositories;
-using MVCEntityMSSQLSignalR.Services;
 using MVCEntityMSSQLSignalR.SignalR;
 using System.IO;
 

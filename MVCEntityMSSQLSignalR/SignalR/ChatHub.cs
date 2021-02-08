@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using MVCEntityMSSQLSignalR.Services;
+using MVCEntityMSSQLSignalR.BLL.Services;
 using System;
 using System.Threading.Tasks;
 

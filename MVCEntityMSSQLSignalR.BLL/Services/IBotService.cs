@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MVCEntityMSSQLSignalR.Services
+namespace MVCEntityMSSQLSignalR.BLL.Services
 {
     public interface IBotService
     {

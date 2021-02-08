@@ -21,8 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MVCEntityMSSQLSignalR.BLL\MVCEntityMSSQLSignalR.BLL.csproj" />
+    <ProjectReference Include="..\MVCEntityMSSQLSignalR.DAL\MVCEntityMSSQLSignalR.DAL.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
