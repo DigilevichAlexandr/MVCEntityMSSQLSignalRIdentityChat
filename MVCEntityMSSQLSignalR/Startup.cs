@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,12 +41,10 @@ namespace MVCEntityMSSQLSignalR
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             string filesConnection = Configuration.GetConnectionString("FilesConnection");
-
             services.AddDbContext<ApplicationContext>(options =>
                  options.UseSqlServer(connection));
             services.AddDbContext<FileContext>(options =>
                 options.UseSqlServer(filesConnection));
-
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                             {
@@ -53,7 +52,12 @@ namespace MVCEntityMSSQLSignalR
                             });
             services.AddControllersWithViews();
             services.AddSignalR();
-
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddTransient<IBotService, BotService>();
             services.AddScoped<IRepository<DAL.Entities.User>, UserRepository>();
             services.AddScoped<IRepository<DAL.Entities.Message>, MessageRepository>();

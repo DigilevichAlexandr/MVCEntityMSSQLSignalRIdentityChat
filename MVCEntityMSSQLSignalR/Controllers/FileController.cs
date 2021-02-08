@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MVCEntityMSSQLSignalR.DAL.Interfaces;
+using MVCEntityMSSQLSignalR.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR.Controllers
@@ -18,6 +19,7 @@ namespace MVCEntityMSSQLSignalR.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Controller constructor
@@ -25,11 +27,13 @@ namespace MVCEntityMSSQLSignalR.Controllers
         /// <param name="logger">Received logger object</param>
         public FileController(ILogger<HomeController> logger,
             IUnitOfWork unitOfWork,
-            IWebHostEnvironment appEnvironment)
+            IWebHostEnvironment appEnvironment,
+            IMapper mapper)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _appEnvironment = appEnvironment;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -40,11 +44,14 @@ namespace MVCEntityMSSQLSignalR.Controllers
         {
             try
             {
-                return View(_unitOfWork.Files.GetAll());
+                var users = _mapper.Map<List<FileViewModel>>(_unitOfWork.Files.GetAll());
+
+                return View();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Problem with unit of work to get all");
+
                 return BadRequest();
             }
         }

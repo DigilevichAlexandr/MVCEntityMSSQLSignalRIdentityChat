@@ -8,7 +8,7 @@
         /// <summary>
         /// File id
         /// </summary>
-        public int Id { get; set; }
+        public int Id { get; set; } 
 
         /// <summary>
         /// File name

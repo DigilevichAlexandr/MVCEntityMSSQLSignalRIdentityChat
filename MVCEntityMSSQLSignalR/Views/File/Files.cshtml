@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MVCEntityMSSQLSignalR.DAL.Entities.File>
+﻿@model IEnumerable<MVCEntityMSSQLSignalR.Models.FileViewModel>
 @{
     ViewData["Title"] = "Add file";
 }
@@ -11,5 +11,6 @@
 <h3>All files</h3>
 @foreach (var f in Model)
 {
+    <p>@f.Name</p>
     <p><img src="@Url.Content(f.Path)"></p>
 }
