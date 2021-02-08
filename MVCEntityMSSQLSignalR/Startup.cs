@@ -59,10 +59,11 @@ namespace MVCEntityMSSQLSignalR
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
             services.AddTransient<IBotService, BotService>();
-            services.AddScoped<IRepository<DAL.Entities.User>, UserRepository>();
-            services.AddScoped<IRepository<DAL.Entities.Message>, MessageRepository>();
-            services.AddScoped<IRepository<DAL.Entities.File>, FileRepository>();
-            services.AddScoped<IUnitOfWork, EFUnitOfWork>();
+            services.AddTransient<IRepository<DAL.Entities.User>, UserRepository>();
+            services.AddTransient<IRepository<DAL.Entities.Message>, MessageRepository>();
+            services.AddTransient<IRepository<DAL.Entities.File>, FileRepository>();
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+            services.AddTransient<IAccountService, AccountService>();
         }
 
         /// <summary>

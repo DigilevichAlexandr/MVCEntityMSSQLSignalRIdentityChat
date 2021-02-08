@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MVCEntityMSSQLSignalR.DAL.Contexts;
+using MVCEntityMSSQLSignalR.BLL.DTO;
+using MVCEntityMSSQLSignalR.BLL.Services;
 using MVCEntityMSSQLSignalR.DAL.Entities;
-using MVCEntityMSSQLSignalR.Helpers;
-using MVCEntityMSSQLSignalR.Models;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -18,15 +17,15 @@ namespace MVCEntityMSSQLSignalR.Controllers
     /// </summary>
     public class AccountController : Controller
     {
-        private readonly ApplicationContext db;
+        private readonly IAccountService _accountService;
 
         /// <summary>
         /// Controller constructor
         /// </summary>
         /// <param name="context">Context for working with database</param>
-        public AccountController(ApplicationContext context)
+        public AccountController(IAccountService accountService)
         {
-            db = context;
+            _accountService = accountService;
         }
 
         /// <summary>
@@ -50,18 +49,11 @@ namespace MVCEntityMSSQLSignalR.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-
-                if (user != null)
+                if(await _accountService.Login(model))
                 {
-                    string hashedPassword = HashHelper.HashWithSalt(model.Password, user.Salt);
+                    await Authenticate(model.Email);
 
-                    if (hashedPassword == user.HashedPassword)
-                    {
-                        await Authenticate(model.Email);
-
-                        return RedirectToAction("Index", "Home");
-                    }
+                    return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError("", "Wrong name or password");
@@ -90,20 +82,8 @@ namespace MVCEntityMSSQLSignalR.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-                if (user == null)
+                if (await _accountService.Register(model))
                 {
-                    (string hashedPassword, string salt) = HashHelper.Hash(model.Password);
-
-                    db.Users.Add(new User
-                    {
-                        Email = model.Email,
-                        HashedPassword = hashedPassword,
-                        Salt = salt,
-                        UserGuid = Guid.NewGuid().ToString()
-                    });
-
-                    await db.SaveChangesAsync();
                     await Authenticate(model.Email);
 
                     return RedirectToAction("Index", "Home");

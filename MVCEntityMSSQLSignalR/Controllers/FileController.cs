@@ -73,7 +73,7 @@ namespace MVCEntityMSSQLSignalR.Controllers
                     await uploadedFile.CopyToAsync(fileStream);
                 }
 
-                var usersGuid = new List<User>(await _unitOfWork.Users.Find(u => u.Email == User.Identity.Name))[0].UserGuid;
+                var usersGuid = new List<User>(await _unitOfWork.Users.Find(u => u.Email == User.Identity.Name))?[0].UserGuid;
                 DAL.Entities.File file = new DAL.Entities.File { Name = uploadedFile.FileName, Path = path, UserGuid = usersGuid };
                 _unitOfWork.Files.Create(file);
                 _unitOfWork.Save();

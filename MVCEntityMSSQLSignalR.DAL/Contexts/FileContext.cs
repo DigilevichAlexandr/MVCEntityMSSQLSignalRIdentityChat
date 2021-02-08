@@ -22,21 +22,5 @@ namespace MVCEntityMSSQLSignalR.DAL.Contexts
         {
             Database.EnsureCreated();
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-C6F8D4Q\SQLEXPRESS;Database=MVCEntityMSSQLSignalR_Files_DB;Trusted_Connection=True;");
-        }
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<File>().HasData(
-        //        new File[]
-        //        {
-        //        new File { Id=1, Name = "", Path = "" },
-        //        new File { Id=2, Name = "", Path = "" },
-        //        new File { Id=3, Name = "", Path = "" }
-        //        });
-        //}
     }
 }

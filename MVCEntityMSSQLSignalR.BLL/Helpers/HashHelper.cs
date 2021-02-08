@@ -2,7 +2,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace MVCEntityMSSQLSignalR.Helpers
+namespace MVCEntityMSSQLSignalR.BLL.Helpers
 {
     public static class HashHelper
     {

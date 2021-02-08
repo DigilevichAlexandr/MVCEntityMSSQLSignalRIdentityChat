@@ -19,6 +19,7 @@ namespace MVCEntityMSSQLSignalR
         {
             CreateHostBuilder(args).Build().Run();
         }
+
         /// <summary>
         /// Host create method
         /// </summary>

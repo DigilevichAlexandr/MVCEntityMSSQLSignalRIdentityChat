@@ -76,9 +76,9 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <summary>
         /// Save method
         /// </summary>
-        public void Save()
+        public async void Save()
         {
-            db.SaveChangesAsync();
+            await db.SaveChangesAsync();
             filesDb.SaveChanges();
         }
 
