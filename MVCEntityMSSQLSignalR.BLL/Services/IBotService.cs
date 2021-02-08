@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MVCEntityMSSQLSignalR.DAL.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR.BLL.Services
@@ -21,6 +22,19 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
         /// Clear messages table method
         /// </summary>
         public void ClearMessages();
-
+        /// <summary>
+        /// Gets all previous messages
+        /// </summary>
+        /// <param name="answer">answers collection</param>
+        /// <param name="messageText">Message-query text</param>
+        /// <returns>Updated answers collection</returns>
+        public Task<List<string>> Get(List<string> answer, string messageText);
+        /// <summary>
+        /// Add message to db
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="messageText"></param>
+        /// <param name="user"></param>
+        void Add(List<string> answer, string messageText, User user);
     }
 }

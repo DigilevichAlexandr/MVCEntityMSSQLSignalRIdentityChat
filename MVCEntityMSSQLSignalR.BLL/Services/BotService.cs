@@ -49,38 +49,22 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
             {
                 case @"\get":
                     {
-                        int.TryParse(messageText.Replace(@"\get", string.Empty), out int n);
-                        var messages = await _db.Messages.Include(m => m.User).Take(n > 0 && n <= 100 ? n : 10).ToListAsync();
-
-                        answer.AddRange(messages.Select(m => $"{m.User.Email}: {m.Text}"));
+                        answer = await Get(answer, messageText);
                     }
                     break;
                 case @"\clear":
                     {
-                        var messages = _db.Messages;
-                        _db.Messages.RemoveRange(messages);
-                        _db.SaveChanges();
+                        Clear();
                     }
                     break;
                 case @"\remove":
                     {
-                        var messages = _db.Messages.Where(m => m.Text == messageText.Replace(@"\remove ", ""));
-                        _db.Messages.RemoveRange(messages);
-                        _db.SaveChanges();
+                        RemoveMessage(messageText);
                     }
                     break;
                 default:
                     {
-                        Message message = new Message
-                        {
-                            Text = messageText,
-                            User = user
-                        };
-
-                        _db.Messages.Add(message);
-                        _db.SaveChanges();
-
-                        answer.Add(messageText);
+                        Add(answer, messageText, user);
                     }
                     break;
             }
@@ -91,10 +75,57 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
         /// <summary>
         /// Removing messages by phrase method
         /// </summary>
-        /// <param name="messageText">Message text to remove</param>
+        /// <param name="messageText"></param>
         public void RemoveMessage(string messageText)
         {
-            throw new NotImplementedException();
+            var messages = _db.Messages.Where(m => m.Text == messageText.Replace(@"\remove ", ""));
+            _db.Messages.RemoveRange(messages);
+            _db.SaveChanges();
+        }
+
+        /// <summary>
+        /// Clear messages table method
+        /// </summary>
+        public void Clear()
+        {
+            var messages = _db.Messages;
+            _db.Messages.RemoveRange(messages);
+            _db.SaveChanges();
+        }
+
+        /// <summary>
+        /// Gets all previous messages
+        /// </summary>
+        /// <param name="answer">answers collection</param>
+        /// <param name="messageText">Message-query text</param>
+        /// <returns>Updated answers collection</returns>
+        public async Task<List<string>> Get(List<string> answer, string messageText)
+        {
+            int.TryParse(messageText.Replace(@"\get", string.Empty), out int n);
+            var messages = await _db.Messages.Include(m => m.User).Take(n > 0 && n <= 100 ? n : 10).ToListAsync();
+            answer.AddRange(messages.Select(m => $"{m.User.Email}: {m.Text}"));
+
+            return answer;
+        }
+
+        /// <summary>
+        /// Add message to db
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="messageText"></param>
+        /// <param name="user"></param>
+        public void Add(List<string> answer, string messageText, User user)
+        {
+            Message message = new Message
+            {
+                Text = messageText,
+                User = user
+            };
+
+            _db.Messages.Add(message);
+            _db.SaveChanges();
+
+            answer.Add(messageText);
         }
     }
 }
