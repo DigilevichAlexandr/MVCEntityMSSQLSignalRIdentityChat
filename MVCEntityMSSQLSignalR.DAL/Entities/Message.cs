@@ -1,5 +1,5 @@
 ﻿namespace MVCEntityMSSQLSignalR.DAL.Entities
-{    
+{
     /// <summary>
      /// Class for entity of Message
      /// </summary>

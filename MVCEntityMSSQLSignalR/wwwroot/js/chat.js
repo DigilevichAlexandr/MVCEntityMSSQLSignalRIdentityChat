@@ -14,7 +14,7 @@
         let message = document.getElementById("message").value;
         document.getElementById("message").value = "";
 
-        if (message.includes('\\')) {
+        if (message.includes('\\') && !message.includes('\\info')) {
             clear();
             hubConnection.invoke("Send", message);
 

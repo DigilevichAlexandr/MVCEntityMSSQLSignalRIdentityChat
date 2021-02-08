@@ -38,10 +38,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         {
             get
             {
-                if (userRepository == null)
-                    userRepository = new UserRepository(db);
-
-                return userRepository;
+                return userRepository ??= new UserRepository(db);
             }
         }
 
@@ -52,10 +49,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         {
             get
             {
-                if (messageRepository == null)
-                    messageRepository = new MessageRepository(db);
-
-                return messageRepository;
+                return messageRepository ??= new MessageRepository(db);
             }
         }
 
@@ -66,10 +60,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         {
             get
             {
-                if (fileRepository == null)
-                    fileRepository = new FileRepository(filesDb);
-
-                return fileRepository;
+                return fileRepository ??= new FileRepository(filesDb);
             }
         }
 
@@ -78,7 +69,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// </summary>
         public async void Save()
         {
-            await db.SaveChangesAsync();
+            await db.SaveChangesAsync().ConfigureAwait(false);
             filesDb.SaveChanges();
         }
 

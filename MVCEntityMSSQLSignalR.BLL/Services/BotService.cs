@@ -49,7 +49,7 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
             {
                 case @"\get":
                     {
-                        answer = await Get(answer, messageText);
+                        answer = await Get(answer, messageText).ConfigureAwait(false);
                     }
                     break;
                 case @"\clear":
@@ -60,6 +60,11 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
                 case @"\remove":
                     {
                         RemoveMessage(messageText);
+                    }
+                    break;
+                case @"\info":
+                    {
+                        Info(answer);
                     }
                     break;
                 default:
@@ -101,8 +106,13 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
         /// <returns>Updated answers collection</returns>
         public async Task<List<string>> Get(List<string> answer, string messageText)
         {
-            int.TryParse(messageText.Replace(@"\get", string.Empty), out int n);
-            var messages = await _db.Messages.Include(m => m.User).Take(n > 0 && n <= 100 ? n : 10).ToListAsync();
+            if (!int.TryParse(messageText.Replace(@"\get", string.Empty), out int n))
+            {
+                n = 100;
+            }
+
+            var messages = await _db.Messages.Include(m => m.User)
+                    .Take(n > 0 && n <= 100 ? n : 10).ToListAsync().ConfigureAwait(false);
             answer.AddRange(messages.Select(m => $"{m.User.Email}: {m.Text}"));
 
             return answer;
@@ -126,6 +136,18 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
             _db.SaveChanges();
 
             answer.Add(messageText);
+        }
+
+        public void Info(List<string> answer)
+        {
+            var comandList = new []{
+                "\\get {number of messages} - get previous messages",
+                "\\remove {message text} - remove message by it's text",
+                "\\clear - clear stored messages",
+                "\\info - get list of commands"
+            };
+
+            answer.AddRange(comandList);
         }
     }
 }

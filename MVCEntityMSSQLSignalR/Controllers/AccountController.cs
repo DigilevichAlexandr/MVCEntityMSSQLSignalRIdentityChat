@@ -49,9 +49,9 @@ namespace MVCEntityMSSQLSignalR.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(await _accountService.Login(model))
+                if (await _accountService.Login(model).ConfigureAwait(false))
                 {
-                    await Authenticate(model.Email);
+                    await Authenticate(model.Email).ConfigureAwait(false);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -82,15 +82,18 @@ namespace MVCEntityMSSQLSignalR.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _accountService.Register(model))
+                if (await _accountService.Register(model).ConfigureAwait(false))
                 {
-                    await Authenticate(model.Email);
+                    await Authenticate(model.Email).ConfigureAwait(false);
 
                     return RedirectToAction("Index", "Home");
                 }
                 else
+                {
                     ModelState.AddModelError("", "Wrong name or password");
+                }
             }
+
             return View(model);
         }
 
@@ -105,7 +108,7 @@ namespace MVCEntityMSSQLSignalR.Controllers
                 ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(id));
+                new ClaimsPrincipal(id)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -114,7 +117,9 @@ namespace MVCEntityMSSQLSignalR.Controllers
         /// <returns>Representation of Login page</returns>
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme)
+                .ConfigureAwait(false);
+
             return RedirectToAction("Login", "Account");
         }
     }

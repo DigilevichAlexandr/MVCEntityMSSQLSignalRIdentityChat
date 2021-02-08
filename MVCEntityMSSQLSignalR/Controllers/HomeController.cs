@@ -34,12 +34,13 @@ namespace MVCEntityMSSQLSignalR.Controllers
         {
             try
             {
-                return await Task.Run(() => View());
+                return await Task.Run(() => View()).ConfigureAwait(false);
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return await Task.Run(() => BadRequest());
+
+                return BadRequest();
             }
         }
 

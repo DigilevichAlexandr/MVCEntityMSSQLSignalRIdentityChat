@@ -28,18 +28,18 @@ namespace MVCEntityMSSQLSignalR.SignalR
             try
             {
                 var userName = Context.User.Identity.Name;
-                var answer = await _bot.HandleMessage(messageText, userName);
+                var answer = await _bot.HandleMessage(messageText, userName).ConfigureAwait(false);
 
                 foreach (string message in answer)
                 {
-                    await this.Clients.All.SendAsync("Send", userName +": "+ message);
+                    await this.Clients.All.SendAsync("Send", userName +": "+ message).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
-                await this.Clients.All.SendAsync("Send", "error!!!");
+                await this.Clients.All.SendAsync("Send", "error!!!").ConfigureAwait(false);
             }
         }
     }

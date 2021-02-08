@@ -23,7 +23,7 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
         /// <param name="model">User login model</param>
         public async Task<bool> Login(LoginModel model)
         {
-            var users = await _db.Users.Find(u => u.Email == model.Email);
+            var users = await _db.Users.Find(u => u.Email == model.Email).ConfigureAwait(false);
 
             if (users.Any())
             {
@@ -41,7 +41,7 @@ namespace MVCEntityMSSQLSignalR.BLL.Services
 
         public async Task<bool> Register(RegisterModel model)
         {
-            var users = await _db.Users.Find(u => u.Email == model.Email);
+            var users = await _db.Users.Find(u => u.Email == model.Email).ConfigureAwait(false);
 
             if (!users.Any())
             {

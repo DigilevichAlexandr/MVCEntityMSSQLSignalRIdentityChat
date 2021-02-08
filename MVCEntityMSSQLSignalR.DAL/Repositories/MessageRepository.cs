@@ -51,7 +51,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         public async Task<IEnumerable<Message>> Find(
             Func<Message, bool> predicate)
         {
-            return (await _db.Messages.ToListAsync())
+            return (await _db.Messages.ToListAsync().ConfigureAwait(false))
                 .Where(predicate);
         }
 
@@ -62,7 +62,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <returns>Message</returns>
         public async Task<Message> Get(int id)
         {
-            return await _db.Messages.FindAsync(id);
+            return await _db.Messages.FindAsync(id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <returns>Message</returns>
         public async Task<IEnumerable<Message>> GetAll()
         {
-            return await _db.Messages.ToListAsync();
+            return await _db.Messages.ToListAsync().ConfigureAwait(false);
         }
 
         /// <summary>

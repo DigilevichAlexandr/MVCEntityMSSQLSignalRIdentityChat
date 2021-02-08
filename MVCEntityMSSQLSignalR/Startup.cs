@@ -46,24 +46,18 @@ namespace MVCEntityMSSQLSignalR
             services.AddDbContext<FileContext>(options =>
                 options.UseSqlServer(filesConnection));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                            {
-                                options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-                            });
+                .AddCookie(options => options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login"));
             services.AddControllersWithViews();
             services.AddSignalR();
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
-            });
+            var mapperConfig = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile()));
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddTransient<IBotService, BotService>();
-            services.AddTransient<IRepository<DAL.Entities.User>, UserRepository>();
-            services.AddTransient<IRepository<DAL.Entities.Message>, MessageRepository>();
-            services.AddTransient<IRepository<DAL.Entities.File>, FileRepository>();
-            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IBotService, BotService>();
+            services.AddScoped<IRepository<DAL.Entities.User>, UserRepository>();
+            services.AddScoped<IRepository<DAL.Entities.Message>, MessageRepository>();
+            services.AddScoped<IRepository<DAL.Entities.File>, FileRepository>();
+            services.AddScoped<IUnitOfWork, EFUnitOfWork>();
         }
 
         /// <summary>

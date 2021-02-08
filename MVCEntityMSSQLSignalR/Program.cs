@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR
 {
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// method Main
@@ -27,9 +27,6 @@ namespace MVCEntityMSSQLSignalR
         /// <returns>Host builder type object</returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }
