@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MVCEntityMSSQLSignalR.DAL.Entities;
 using MVCEntityMSSQLSignalR.DAL.Interfaces;
 using MVCEntityMSSQLSignalR.Models;
 using System;
@@ -40,13 +41,13 @@ namespace MVCEntityMSSQLSignalR.Controllers
         /// Get chat privacy method
         /// </summary>
         /// <returns>Privacy page</returns>
-        public IActionResult Files()
+        public async Task<IActionResult> Files()
         {
             try
             {
-                var users = _mapper.Map<List<FileViewModel>>(_unitOfWork.Files.GetAll());
+                var files = _mapper.Map<List<FileViewModel>>(await _unitOfWork.Files.GetAll());
 
-                return View();
+                return View(files);
             }
             catch (Exception ex)
             {
@@ -72,7 +73,8 @@ namespace MVCEntityMSSQLSignalR.Controllers
                     await uploadedFile.CopyToAsync(fileStream);
                 }
 
-                DAL.Entities.File file = new DAL.Entities.File { Name = uploadedFile.FileName, Path = path };
+                var usersGuid = new List<User>(await _unitOfWork.Users.Find(u => u.Email == User.Identity.Name))[0].UserGuid;
+                DAL.Entities.File file = new DAL.Entities.File { Name = uploadedFile.FileName, Path = path, UserGuid = usersGuid };
                 _unitOfWork.Files.Create(file);
                 _unitOfWork.Save();
             }

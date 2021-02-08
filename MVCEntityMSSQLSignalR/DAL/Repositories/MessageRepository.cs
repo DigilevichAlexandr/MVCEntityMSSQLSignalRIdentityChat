@@ -5,12 +5,13 @@ using MVCEntityMSSQLSignalR.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR.DAL.Repositories
 {
     public class MessageRepository : IRepository<Message>
     {
-        private readonly ApplicationContext db;
+        private readonly ApplicationContext _db;
 
         /// <summary>
         /// Message Repository constructor
@@ -18,7 +19,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="context"></param>
         public MessageRepository(ApplicationContext context)
         {
-            this.db = context;
+            this._db = context;
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="item">Message created object</param>
         public void Create(Message item)
         {
-            db.Messages.Add(item);
+            _db.Messages.Add(item);
         }
 
         /// <summary>
@@ -36,10 +37,10 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="id">Id of Message</param>
         public void Delete(int id)
         {
-            Message message = db.Messages.Find(id);
+            Message message = _db.Messages.Find(id);
 
             if (message != null)
-                db.Messages.Remove(message);
+                _db.Messages.Remove(message);
         }
 
         /// <summary>
@@ -47,9 +48,11 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// </summary>
         /// <param name="predicate">Predicate function</param>
         /// <returns>Collection of Messages</returns>
-        public IEnumerable<Message> Find(Func<Message, bool> predicate)
+        public async Task<IEnumerable<Message>> Find(
+            Func<Message, bool> predicate)
         {
-            return db.Messages.Where(predicate).ToList();
+            return (await _db.Messages.ToListAsync())
+                .Where(predicate);
         }
 
         /// <summary>
@@ -57,18 +60,18 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// </summary>
         /// <param name="id">Id of item</param>
         /// <returns>Message</returns>
-        public Message Get(int id)
+        public async Task<Message> Get(int id)
         {
-            return db.Messages.Find(id);
+            return await _db.Messages.FindAsync(id);
         }
 
         /// <summary>
         /// Method for getting all Messages
         /// </summary>
         /// <returns>Message</returns>
-        public IEnumerable<Message> GetAll(int n = 10)
+        public async Task<IEnumerable<Message>> GetAll()
         {
-            return db.Messages;
+            return await _db.Messages.ToListAsync();
         }
 
         /// <summary>
@@ -77,7 +80,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="item">Found Message for updating</param>
         public void Update(Message item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            _db.Entry(item).State = EntityState.Modified;
         }
     }
 }

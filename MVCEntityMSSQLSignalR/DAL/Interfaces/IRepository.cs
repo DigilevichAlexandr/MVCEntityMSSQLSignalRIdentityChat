@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR.DAL.Interfaces
 {
@@ -12,21 +13,21 @@ namespace MVCEntityMSSQLSignalR.DAL.Interfaces
         /// Method for getting all Items
         /// </summary>
         /// <returns>Collection of Items</returns>
-        IEnumerable<T> GetAll(int n = 10);
+        Task<IEnumerable<T>> GetAll();
 
         /// <summary>
         /// Get one Item by id
         /// </summary>
         /// <param name="id">Id of Item</param>
         /// <returns>Item</returns>
-        T Get(int id);
+        Task<T> Get(int id);
 
         /// <summary>
         /// Get collection of Items with predicate
         /// </summary>
         /// <param name="predicate">Predicate function</param>
         /// <returns>Item</returns>
-        IEnumerable<T> Find(Func<T, Boolean> predicate);
+        Task<IEnumerable<T>> Find(Func<T, Boolean> predicate);
 
         /// <summary>
         /// Add Item

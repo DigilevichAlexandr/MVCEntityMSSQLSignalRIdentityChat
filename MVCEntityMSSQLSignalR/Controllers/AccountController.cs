@@ -6,6 +6,7 @@ using MVCEntityMSSQLSignalR.DAL.Contexts;
 using MVCEntityMSSQLSignalR.DAL.Entities;
 using MVCEntityMSSQLSignalR.Helpers;
 using MVCEntityMSSQLSignalR.Models;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -98,7 +99,8 @@ namespace MVCEntityMSSQLSignalR.Controllers
                     {
                         Email = model.Email,
                         HashedPassword = hashedPassword,
-                        Salt = salt
+                        Salt = salt,
+                        UserGuid = Guid.NewGuid().ToString()
                     });
 
                     await db.SaveChangesAsync();

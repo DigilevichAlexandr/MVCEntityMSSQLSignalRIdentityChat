@@ -5,12 +5,13 @@ using MVCEntityMSSQLSignalR.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MVCEntityMSSQLSignalR.DAL.Repositories
 {
     public class FileRepository : IRepository<File>
     {
-        private readonly FileContext db;
+        private readonly FileContext _db;
 
         /// <summary>
         /// File Repository constructor
@@ -18,7 +19,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="context"></param>
         public FileRepository(FileContext context)
         {
-            this.db = context;
+            this._db = context;
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="item">File created object</param>
         public void Create(File item)
         {
-            db.Files.Add(item);
+            _db.Files.Add(item);
         }
 
         /// <summary>
@@ -36,10 +37,10 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="id">Id of File</param>
         public void Delete(int id)
         {
-            File file = db.Files.Find(id);
+            File file = _db.Files.Find(id);
 
             if (file != null)
-                db.Files.Remove(file);
+                _db.Files.Remove(file);
         }
 
         /// <summary>
@@ -47,9 +48,13 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// </summary>
         /// <param name="predicate">Predicate function</param>
         /// <returns>Collection of Files</returns>
-        public IEnumerable<File> Find(Func<File, bool> predicate)
+        public async Task<IEnumerable<File>> Find(
+            Func<File, bool> predicate)
         {
-            return db.Files.Where(predicate).ToList();
+            var files = (await _db.Files.ToListAsync())
+                .Where(predicate);
+
+            return files;
         }
 
         /// <summary>
@@ -57,18 +62,18 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// </summary>
         /// <param name="id">Id of item</param>
         /// <returns>File</returns>
-        public File Get(int id)
+        public async Task<File> Get(int id)
         {
-            return db.Files.Find(id);
+            return await _db.Files.FindAsync(id);
         }
 
         /// <summary>
         /// Method for getting all Files
         /// </summary>
         /// <returns>File</returns>
-        public IEnumerable<File> GetAll(int n = 10)
+        public async Task<IEnumerable<File>> GetAll()
         {
-            return db.Files.Take(n);
+            return await _db.Files.ToListAsync();
         }
 
         /// <summary>
@@ -77,7 +82,7 @@ namespace MVCEntityMSSQLSignalR.DAL.Repositories
         /// <param name="item">Found File for updating</param>
         public void Update(File item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            _db.Entry(item).State = EntityState.Modified;
         }
     }
 }
